@@ -1,0 +1,9 @@
+{
+  "name": "How_to_QuickSell",
+  "version_number": "1.0.0",
+  "website_url": "https://github.com/KeyErrorFinn/how-to-fish-quicksell-mod",
+  "description": "Sell inventory catches and nearby dead fish instantly with safeguards and native Gameplay options. Designed for single-player and lobby hosts.",
+  "dependencies": [
+    "BepInEx-BepInExPack-5.4.2305"
+  ]
+}

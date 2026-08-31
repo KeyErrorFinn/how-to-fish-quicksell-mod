@@ -1,0 +1,7 @@
+bin/
+obj/
+.nuget-packages/
+.dotnet-cli/
+.tools/
+GameReferences.props
+dist/*.zip

@@ -1,0 +1,10 @@
+<Project>
+  <!--
+    Copy this file to GameReferences.props if your game or Thunderstore profile
+    lives elsewhere. GameReferences.props is deliberately ignored by Git.
+  -->
+  <PropertyGroup>
+    <HowToFishGameDir>C:\Path\To\How to Fish\How to Fish</HowToFishGameDir>
+    <BepInExDir>C:\Path\To\ThunderstoreProfile\BepInEx</BepInExDir>
+  </PropertyGroup>
+</Project>
