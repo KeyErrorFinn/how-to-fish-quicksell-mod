@@ -95,6 +95,14 @@ For ScriptEngine development:
 
 That script builds with `DeployToProfile=true` and copies the matching DLL and PDB into `BepInEx/scripts` because `DeployToScriptEngine` defaults to true.
 
+## Engineering notes
+
+The mod deliberately uses the game's existing trader, money, and item-destruction paths instead of maintaining a second economy system. Sale candidates pass through explicit rules for quest items, value, creature state, ownership, range, and host authority.
+
+One subtle problem was preventing the same catch from being sold more than once when it appeared in overlapping sources, such as the held item and inventory. A set of processed item instances provides a single sale pass while the game's normal destruction flow remains responsible for removing sold objects.
+
+Local development uses the real game assemblies because the public repository cannot redistribute them. Release builds are therefore verified against a configured *How to Fish* installation and BepInEx profile. A future improvement would be to isolate more pure eligibility logic behind small interfaces so it can be tested without loading the game.
+
 ## Troubleshooting
 
 | Message or symptom | Check |
