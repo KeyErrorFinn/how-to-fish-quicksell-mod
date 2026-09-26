@@ -18,7 +18,7 @@ How to QuickSell is a BepInEx mod for *How to Fish* that sells your catch quickl
 
 QuickSell finds the trader's money NPC on the loaded island and sends each selected item through the game's own sale and destruction logic. This means it must be used by the lobby host / single-player host; it cannot sell items on a remote server from a multiplayer client.
 
-By default, inventory fish/creatures are enabled and floor fish are disabled. Press `F8` to sell every enabled group. For floor selling, only dead `Fish` objects close to the loaded island are included - clams, leeches, footsnails, and other non-fish pickups are excluded.
+By default, inventory fish/creatures are enabled and floor fish are disabled. Press `F8` to sell every enabled group. For floor selling, only dead `Fish` objects close to the loaded island are included, while clams, leeches, footsnails, and other non-fish pickups are excluded.
 
 ## Installation
 
@@ -44,9 +44,9 @@ The two everyday settings are in **Options > Gameplay**:
 
 Additional advanced settings are stored in BepInEx's config file for `com.keyerrorfinn.quicksell`:
 
-- **Sell all hotkey**  -  defaults to `F8`.
-- **Only sell fish**  -  keeps the safety filter enabled by default.
-- **Floor sale water buffer**  -  defaults to 30 metres beyond the island edge.
+- **Sell all hotkey**, defaults to `F8`.
+- **Only sell fish**, keeps the safety filter enabled by default.
+- **Floor sale water buffer**, defaults to 30 metres beyond the island edge.
 
 ## Requirements and notes
 
