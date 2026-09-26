@@ -1,64 +1,129 @@
 # How to QuickSell
 
-How to QuickSell is a BepInEx mod for *How to Fish* that sells your catch quickly through the game's normal sale path. Press one key to sell the enabled groups, with the money and item removal handled by the game itself.
+<p align="center">
+  <a href="https://github.com/KeyErrorFinn/how-to-fish-quicksell-mod/commits/main"><img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/KeyErrorFinn/how-to-fish-quicksell-mod" /></a>
+  <img alt="C Sharp" src="https://img.shields.io/badge/C%23-512BD4?logo=dotnet&logoColor=fff" />
+  <img alt=".NET Framework 4.7.2" src="https://img.shields.io/badge/.NET%20Framework-4.7.2-512BD4" />
+  <img alt="BepInEx 5" src="https://img.shields.io/badge/BepInEx-5-222" />
+  <img alt="Thunderstore" src="https://img.shields.io/badge/Thunderstore-package-1F87FF" />
+</p>
+
+A BepInEx mod for *How to Fish* that sells eligible catches through the game's normal trader flow. Press `F8` to sell the enabled groups.
 
 ## Features
 
-- Sell eligible fish and creatures from your inventory with `F8`.
-- Sell a freshly caught item that is still being held and has not entered the inventory bar yet.
-- Optionally sell dead fish lying on the current island or floating in nearby water.
-- Uses the game's trader sale flow, so items are removed and money is awarded normally.
+- Sells eligible fish and creatures from the inventory.
+- Includes a freshly held catch that has not entered the inventory bar.
+- Can optionally sell nearby dead floor fish.
+- Uses the game's own money and item-destruction flow.
 - Protects quest items, zero-value items, and living creatures.
-- Adds two toggles to **Options > Gameplay**:
-  - **QuickSell: Floor Fish**
-  - **QuickSell: Inventory Fish/Creatures**
-- The Gameplay settings list scrolls and has a scrollbar when the options do not fit on screen.
+- Adds inventory and floor-selling toggles to **Options > Gameplay**.
+- Adds scrolling to the Gameplay settings list when needed.
 
-## How it works
+## Requirements
 
-QuickSell finds the trader's money NPC on the loaded island and sends each selected item through the game's own sale and destruction logic. This means it must be used by the lobby host / single-player host; it cannot sell items on a remote server from a multiplayer client.
+- *How to Fish*
+- BepInEx 5
+- Single-player or lobby-host authority
+- A loaded island containing a money NPC
 
-By default, inventory fish/creatures are enabled and floor fish are disabled. Press `F8` to sell every enabled group. For floor selling, only dead `Fish` objects close to the loaded island are included, while clams, leeches, footsnails, and other non-fish pickups are excluded.
+Remote multiplayer clients cannot perform the sale.
 
-## Installation
+## Install
 
-### Normal installation
+1. Download `KeyErrorFinn.QuickSell.dll` from the release.
+2. Create:
 
-1. Install **BepInEx 5** for *How to Fish* (the Thunderstore profile is the simplest option).
-2. Download `KeyErrorFinn.QuickSell.dll` from the QuickSell release.
-3. Create this folder if it does not already exist:
+   ~~~text
+   BepInEx/plugins/KeyErrorFinn-QuickSell/
+   ~~~
 
-   `BepInEx/plugins/KeyErrorFinn-QuickSell/`
+3. Put the DLL in that folder.
+4. Start the game through the same BepInEx or Thunderstore profile.
+5. Check the BepInEx log for:
 
-4. Copy `KeyErrorFinn.QuickSell.dll` into that folder.
-5. Start the game through the same Thunderstore profile.
+   ~~~text
+   How to QuickSell 1.0.0 loaded
+   ~~~
 
-## Settings
+## Controls and settings
 
-The two everyday settings are in **Options > Gameplay**:
+The default hotkey is `F8`.
 
 | Setting | Default | Description |
 | --- | --- | --- |
-| QuickSell: Floor Fish | Off | Sell dead fish on the loaded island and within the nearby-water range. |
-| QuickSell: Inventory Fish/Creatures | On | Sell eligible inventory catches and an eligible catch currently held in hand. |
+| QuickSell: Floor Fish | Off | Sell eligible dead fish on the island and in nearby water. |
+| QuickSell: Inventory Fish/Creatures | On | Sell eligible inventory catches and the freshly held item. |
+| Sell all hotkey | F8 | Run one sale pass for every enabled group. |
+| Only sell fish | On | Restrict inventory sales to fish and creature items. |
+| Floor sale water buffer | 30 metres | Extend the floor-fish search beyond the island edge. |
 
-Additional advanced settings are stored in BepInEx's config file for `com.keyerrorfinn.quicksell`:
+The two everyday toggles appear in **Options > Gameplay**. Advanced values are stored in BepInEx's configuration for `com.keyerrorfinn.quicksell`.
 
-- **Sell all hotkey**, defaults to `F8`.
-- **Only sell fish**, keeps the safety filter enabled by default.
-- **Floor sale water buffer**, defaults to 30 metres beyond the island edge.
+> [!CAUTION]
+> Turning off **Only sell fish** allows any non-quest inventory item with a positive value to be sold. Test with low-value items first.
 
-## Requirements and notes
+## Eligibility rules
 
-- *How to Fish* with BepInEx 5.
-- You must be in single-player or be the lobby host.
-- A money NPC must be loaded; travel to the trader island if QuickSell says none is available.
-- Test mod updates with low-value catches first, especially after a game update.
+An inventory item is skipped when it:
+
+- is a quest item,
+- has no sale value,
+- contains a living creature,
+- is already being destroyed or sold,
+- or does not match the fish-only filter.
+
+Floor selling is stricter. It only selects dead `Fish` objects that are outside an inventory, have no holder, are within the configured island range, and have a positive value. Shellfish and other non-fish floor creatures are excluded.
+
+## Build from source
+
+1. Copy `GameReferences.props.example` to `GameReferences.props`.
+2. Set `HowToFishGameDir` and `BepInExDir` for your installation.
+3. Build the project:
+
+   ~~~powershell
+   dotnet build QuickSell.csproj -c Release
+   ~~~
+
+The project targets .NET Framework 4.7.2. `GameReferences.props` is ignored by Git so machine-specific paths stay local.
+
+For ScriptEngine development:
+
+~~~powershell
+./build-and-reload.ps1
+~~~
+
+That script builds with `DeployToProfile=true` and copies the matching DLL and PDB into `BepInEx/scripts` because `DeployToScriptEngine` defaults to true.
+
+## Troubleshooting
+
+| Message or symptom | Check |
+| --- | --- |
+| No money NPC is available | Travel to an island with the trader and try again. |
+| Nothing sells in multiplayer | Run as the lobby host or in single-player. |
+| Floor fish are ignored | Enable floor selling and confirm the fish is dead and near the loaded island. |
+| A catch is protected | Check whether it is a quest item, alive, worthless, or blocked by the fish-only filter. |
+| Settings do not appear | Confirm the DLL is loaded by the same BepInEx profile used to start the game. |
+
+## Project layout
+
+- `src/QuickSellPlugin.cs`, configuration, hotkey, and settings registration.
+- `src/QuickSellService.cs`, sale orchestration.
+- `src/SaleRules.cs`, eligibility and money-NPC lookup.
+- `src/QuickSellSettingsUI.cs`, native Gameplay menu controls.
+- `dist/`, Thunderstore package contents.
+- `build-and-reload.ps1`, ScriptEngine build and deployment helper.
+
+## Version
+
+Current source and package version: **1.0.0**
+
+See `dist/CHANGELOG.md` for release notes.
 
 ## Author
 
 Created by [KeyErrorFinn](https://github.com/KeyErrorFinn).
 
-## Version
+## Licence
 
-**1.0.0**
+No project-level licence is currently included. BepInEx, the game, and other dependencies keep their own licences.
